@@ -1,0 +1,15 @@
+{
+  "name": "projekt-dt211g",
+  "version": "1.0.0",
+  "author": "jugu2402",
+  "license": "ISC",
+  "source": "src/index.html",
+  "scripts": {
+    "start":  "parcel",
+    "build": "parcel build"
+  },
+  "description": "",
+  "devDependencies": {
+    "parcel": "^2.13.3"
+  }
+}
