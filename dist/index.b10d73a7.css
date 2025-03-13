@@ -1,4 +1,14 @@
 body {
-  background: red;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3.5em;
+}
+
+#map {
+  border: 2px solid green;
 }
 /*# sourceMappingURL=index.b10d73a7.css.map */

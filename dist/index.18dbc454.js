@@ -601,7 +601,25 @@ Attach functions to map elements by eventlisteners
 click --> handle state click
 mouseover --> handleMouseOver (add class)
 mouseout --> handleMouseOut (remove class)
-*/ 
+*/ /* test function to style svg path elements */ /**
+ * Initializes and styles the SVG map by applying a default fill color to all paths.
+ * This function listens for the 'load' event on the SVG object, ensuring the SVG is 
+ * fully loaded before modifying its contents. It then applies a fill color to each 
+ * path element within the SVG document.
+ */ function styleSvgMap() {
+    const svgObject = document.getElementById('us-map');
+    // Ensure the SVG map is loaded before styling is added
+    svgObject.onload = ()=>{
+        const svgDoc = svgObject.contentDocument;
+        const paths = svgDoc.querySelectorAll('path');
+        // Apply a fill color to each path in the SVG
+        paths.forEach((path)=>{
+            path.style.fill = '#72977a';
+        });
+    };
+}
+styleSvgMap();
+
 },{}]},["80cCk","1SICI"], "1SICI", "parcelRequire94c2")
 
 //# sourceMappingURL=index.18dbc454.js.map
