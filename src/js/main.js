@@ -49,7 +49,7 @@ document.getElementById("state-selector").addEventListener("change", function (e
 /* Test collecting brewery data, add: by_state=california& after ? before per_page */
 async function fetchBreweriesByState(state) {
   try {
-    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=15`);
+    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=150`);
     const breweries = await response.json();
     console.log(breweries); // console log to check data
 
@@ -87,12 +87,12 @@ async function fetchWeatherData(latitude, longitude) {
     }
 
     const weatherData = await response.json();
-    const temperature = weatherData.hourly.temperature_2m[0]; // Get the first temperature reading (current or next hour)
+    const temperature = weatherData.hourly.temperature_2m[0]; 
 
     return {
-      detailedForecast: `The current temperature is ${temperature}°C`, // You can add more details if you like
+      detailedForecast: `The current temperature is ${temperature}°C`, 
       temperature: temperature, // Temperature for the first hour (or closest available)
-      temperatureUnit: "°C" // Celsius, as the Open-Meteo API provides data in Celsius by default
+      temperatureUnit: "°C" 
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
@@ -122,17 +122,15 @@ function displayBreweryAndWeather(breweries) {
     cityState.textContent = `${brewery.city}, ${brewery.state}`;
     breweryElement.appendChild(cityState);
 
-    const brewerySite = document.createElement("p");
-    cityState.textContent = `${brewery.website_url}`;
+    const brewerySite = document.createElement("a");
+    brewerySite.textContent = brewery.website_url;
+    brewerySite.href = brewery.website_url;
+    brewerySite.target = "_blank";
     breweryElement.appendChild(brewerySite);
 
     const weather = document.createElement("p");
     weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
     breweryElement.appendChild(weather);
-
-    const temperature = document.createElement("p");
-    temperature.textContent = `Temperature: ${brewery.weather.temperature} ${brewery.weather.temperatureUnit}`;
-    breweryElement.appendChild(temperature);
 
     container.appendChild(breweryElement);
   });
