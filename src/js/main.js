@@ -38,3 +38,27 @@ function styleSvgMap() {
   }
   
   styleSvgMap();
+
+/* Test collecting brewery data, add: by_state=california& after ? before per_page */
+  async function fetchBreweries() {
+    try {
+      const response = await fetch('https://api.openbrewerydb.org/v1/breweries?');
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+
+      data.forEach(brewery => {
+        console.log(`${brewery.name} - ${brewery.city}, ${brewery.state}`);
+      });
+  
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  }
+  
+  fetchBreweries();
