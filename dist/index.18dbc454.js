@@ -618,20 +618,77 @@ mouseout --> handleMouseOut (remove class)
     };
 }
 styleSvgMap();
-/* Test collecting brewery data, add: by_state=california& after ? before per_page */ async function fetchBreweries() {
+/* Test collecting brewery data, add: by_state=california& after ? before per_page */ async function fetchBreweriesByState(state) {
     try {
-        const response = await fetch('https://api.openbrewerydb.org/v1/breweries?');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        console.log(data);
-        data.forEach((brewery)=>{
-            console.log(`${brewery.name} - ${brewery.city}, ${brewery.state}`);
-        });
+        const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=5`);
+        const breweries = await response.json();
+        console.log(breweries); // console log to check data
+        // fetch weather for each brewery 
+        for (const brewery of breweries)if (brewery.latitude && brewery.longitude) {
+            // if lat and lon are available, fetch weather data
+            const weatherData = await fetchWeatherData(brewery.latitude, brewery.longitude);
+            brewery.weather = weatherData; // Add weather info to the brewery object
+        } else // if lat and lon are not available, set weather to a message
+        brewery.weather = {
+            detailedForecast: "No weather data to display"
+        };
+        // display the combined data with breweries and weather
+        displayBreweryAndWeather(breweries);
     } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error("Error fetching breweries:", error);
     }
 }
-fetchBreweries();
+// function to fetch weather data for a given latitude and longitude from Weather.gov API
+async function fetchWeatherData(latitude, longitude) {
+    try {
+        // fetch weather data using brewery latitude and longitude
+        const response = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`);
+        const pointData = await response.json();
+        const forecastUrl = pointData.properties.forecast;
+        // fetch the actual weather
+        const forecastResponse = await fetch(forecastUrl);
+        const forecastData = await forecastResponse.json();
+        // get todays weather (first period)
+        const forecast = forecastData.properties.periods[0];
+        return {
+            detailedForecast: forecast.detailedForecast,
+            temperature: forecast.temperature,
+            temperatureUnit: forecast.temperatureUnit // temperature unit in °F or °C
+        };
+    } catch (error) {
+        console.error("Error fetching weather data:", error);
+        return {
+            detailedForecast: "No weather data to display",
+            temperature: "N/A",
+            temperatureUnit: "N/A"
+        }; // return fallback message if there's an error
+    }
+}
+// display the combined brewery and weather data in the application
+function displayBreweryAndWeather(breweries) {
+    const container = document.getElementById("brewery-container");
+    container.innerHTML = ""; // Clear previous content
+    breweries.forEach((brewery)=>{
+        const breweryElement = document.createElement("div");
+        breweryElement.classList.add("brewery");
+        // create the content for each brewery and weather info
+        const name = document.createElement("h3");
+        name.textContent = brewery.name;
+        breweryElement.appendChild(name);
+        const cityState = document.createElement("p");
+        cityState.textContent = `${brewery.city}, ${brewery.state}`;
+        breweryElement.appendChild(cityState);
+        const weather = document.createElement("p");
+        weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
+        breweryElement.appendChild(weather);
+        const temperature = document.createElement("p");
+        temperature.textContent = `Temperature: ${brewery.weather.temperature} ${brewery.weather.temperatureUnit}`;
+        breweryElement.appendChild(temperature);
+        container.appendChild(breweryElement);
+    });
+}
+// Call the function to fetch breweries and weather for a specific state (e.g., California)
+fetchBreweriesByState('California');
 
 },{}]},["80cCk","1SICI"], "1SICI", "parcelRequire94c2")
 
