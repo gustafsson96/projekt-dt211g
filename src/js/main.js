@@ -151,15 +151,19 @@ function displayBreweryAndWeather(breweries) {
     name.textContent = brewery.name;
     breweryElement.appendChild(name);
 
-    const cityState = document.createElement("p");
-    cityState.textContent = `${brewery.city}, ${brewery.state}`;
-    breweryElement.appendChild(cityState);
-
     const brewerySite = document.createElement("a");
     brewerySite.textContent = brewery.website_url;
     brewerySite.href = brewery.website_url;
     brewerySite.target = "_blank";
     breweryElement.appendChild(brewerySite);
+
+    const cityState = document.createElement("p");
+    cityState.textContent = `${brewery.city}, ${brewery.state}`;
+    breweryElement.appendChild(cityState);
+
+    const breweryStreet = document.createElement("p");
+    breweryStreet.textContent = brewery.street;
+    breweryElement.appendChild(breweryStreet);
 
     const weather = document.createElement("p");
     weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
