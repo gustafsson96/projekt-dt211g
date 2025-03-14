@@ -21,7 +21,7 @@ mouseout --> handleMouseOut (remove class)
  * Style the SVG map by applying a default fill color to all paths.
  * This function listens for the 'load' event on the SVG object, ensuring the SVG is 
  * fully loaded before applying a fill color to each path element.
- */
+
 function styleSvgMap() {
   const svgObject = document.getElementById('us-map');
 
@@ -38,6 +38,7 @@ function styleSvgMap() {
 }
 
 styleSvgMap();
+ */
 
 document.getElementById("state-selector").addEventListener("change", function (event) {
   const state = event.target.value; //selected state
@@ -45,6 +46,36 @@ document.getElementById("state-selector").addEventListener("change", function (e
     fetchBreweriesByState(state); // fetch the breweries for the selected state 
   }
 });
+
+
+let map;
+
+function setMap() {
+  map = L.map("map").setView([37.8, -96], 4); 
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+}
+
+function pinBreweries(breweries) {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
+
+  breweries.forEach(brewery => {
+    if (brewery.latitude && brewery.longitude) {
+      const marker = L.marker([brewery.latitude, brewery.longitude]).addTo(map);
+      marker.bindPopup(`<strong>${brewery.name}</strong><br>${brewery.city}, ${brewery.state}`);
+    }
+  });
+
+  if (breweries.length > 0 && breweries[0].latitude && breweries[0].longitude) {
+    map.setView([breweries[0].latitude, breweries[0].longitude], 7);
+  }
+}
 
 /* Test collecting brewery data, add: by_state=california& after ? before per_page */
 async function fetchBreweriesByState(state) {
@@ -72,6 +103,8 @@ async function fetchBreweriesByState(state) {
 
     // Display breweries with weather
     displayBreweryAndWeather(breweries);
+
+    pinBreweries(breweries)
   } catch (error) {
     console.error("Error fetching breweries:", error);
   }
@@ -136,3 +169,4 @@ function displayBreweryAndWeather(breweries) {
   });
 }
 
+document.addEventListener("DOMContentLoaded", setMap);
