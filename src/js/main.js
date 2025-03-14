@@ -39,7 +39,14 @@ function styleSvgMap() {
   
   styleSvgMap();
 
-/* Test collecting brewery data, add: by_state=california& after ? before per_page */
+document.getElementById("state-selector").addEventListener("change", function(event) {
+  const state = event.target.value; //selected state
+  if (state) {
+    fetchBreweriesByState(state); // fetch the breweries for the selected state 
+  }
+});
+
+  /* Test collecting brewery data, add: by_state=california& after ? before per_page */
 
 async function fetchBreweriesByState(state) {
   try {
@@ -126,5 +133,3 @@ function displayBreweryAndWeather(breweries) {
   });
 }
 
-// Call the function to fetch breweries and weather for a specific state (e.g., California)
-fetchBreweriesByState('California');

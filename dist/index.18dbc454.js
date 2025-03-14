@@ -618,6 +618,10 @@ mouseout --> handleMouseOut (remove class)
     };
 }
 styleSvgMap();
+document.getElementById("state-selector").addEventListener("change", function(event) {
+    const state = event.target.value; //selected state
+    if (state) fetchBreweriesByState(state); // fetch the breweries for the selected state 
+});
 /* Test collecting brewery data, add: by_state=california& after ? before per_page */ async function fetchBreweriesByState(state) {
     try {
         const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=5`);
@@ -687,8 +691,6 @@ function displayBreweryAndWeather(breweries) {
         container.appendChild(breweryElement);
     });
 }
-// Call the function to fetch breweries and weather for a specific state (e.g., California)
-fetchBreweriesByState('California');
 
 },{}]},["80cCk","1SICI"], "1SICI", "parcelRequire94c2")
 
