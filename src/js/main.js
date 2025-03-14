@@ -77,43 +77,22 @@ async function fetchBreweriesByState(state) {
   }
 }
 
-// function to fetch weather data for a given latitude and longitude from Weather.gov API
 async function fetchWeatherData(latitude, longitude) {
   try {
-    // Fetch weather data using brewery latitude and longitude
-    const response = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`, {
-      headers: {
-        "User-Agent": "StateSips (jugu2402@student.miun.se)"
-      }
-    });
-
+    // Fetch weather data from Open-Meteo API
+    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
+    
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const pointData = await response.json();
-    const forecastUrl = pointData.properties.forecast;
-
-    // Fetch the actual weather
-    const forecastResponse = await fetch(forecastUrl, {
-      headers: {
-        "User-Agent": "StateSips (jugu2402@student.miun.se)"
-      }
-    });
-
-    if (!forecastResponse.ok) {
-      throw new Error(`HTTP error! Status: ${forecastResponse.status}`);
-    }
-
-    const forecastData = await forecastResponse.json();
-
-    // Get today's weather (first period)
-    const forecast = forecastData.properties.periods[0];
+    const weatherData = await response.json();
+    const temperature = weatherData.hourly.temperature_2m[0]; // Get the first temperature reading (current or next hour)
 
     return {
-      detailedForecast: forecast.detailedForecast, // Detailed forecast text
-      temperature: forecast.temperature, // Temperature for the day
-      temperatureUnit: forecast.temperatureUnit // Temperature unit in °F or °C
+      detailedForecast: `The current temperature is ${temperature}°C`, // You can add more details if you like
+      temperature: temperature, // Temperature for the first hour (or closest available)
+      temperatureUnit: "°C" // Celsius, as the Open-Meteo API provides data in Celsius by default
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
@@ -121,7 +100,7 @@ async function fetchWeatherData(latitude, longitude) {
       detailedForecast: "No weather data to display",
       temperature: "N/A",
       temperatureUnit: "N/A"
-    }; // Return fallback message if there's an error
+    };
   }
 }
 
@@ -142,6 +121,10 @@ function displayBreweryAndWeather(breweries) {
     const cityState = document.createElement("p");
     cityState.textContent = `${brewery.city}, ${brewery.state}`;
     breweryElement.appendChild(cityState);
+
+    const brewerySite = document.createElement("p");
+    cityState.textContent = `${brewery.website_url}`;
+    breweryElement.appendChild(brewerySite);
 
     const weather = document.createElement("p");
     weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
