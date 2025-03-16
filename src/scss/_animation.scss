@@ -16,7 +16,7 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        animation: fillBeer 10s ease-in-out infinite alternate;
+        animation: fillBeer 8s ease-in-out infinite alternate;
     }
 
     .beer-text {
@@ -36,20 +36,44 @@
         width: 20px;
         border: 4px solid #333;
         border-radius: 0 7px 7px 0;
-        z-index: 10!important;
     }
-
 }
 
 @keyframes fillBeer {
     0% {
-        height: 7%;
-    }
-    50% {
-        height: 80%;
+        height: 20%;
     }
     100% {
-        height: 10%;
+        height: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .beer-glass {
+        grid-column: 2 / 5;
+        grid-row: 2;
+        width: 60px;
+        height: 90px;
+
+        .beer {
+            border-radius:  0 0 16px 16px;
+        }
+
+        .beer-text {
+            position: absolute;
+            top: 30px;
+            left: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .beer-handle {
+            top: 25px;
+            right: -26px;
+            height: 30px;
+            width: 18px;
+        }
     }
 }
 

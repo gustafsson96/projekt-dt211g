@@ -65,7 +65,15 @@ footer {
 }
 
 @media screen and (max-width: 768px) {
+    #header-content {
+        place-items: center;
+    }
+
     footer {
+        div {
+            padding: 0 1em;
+        }
+
         .footer-about {
             grid-column: 1 / -1;
             grid-row: 1;
