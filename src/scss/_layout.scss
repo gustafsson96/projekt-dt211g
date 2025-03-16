@@ -17,11 +17,20 @@ body {
     }
 }
 
+#brewery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em;
+    margin: 0 auto;
+}
+
 footer {
     display: grid;
     grid-template-columns: 30% 30% 5% 35%;
     padding: 1em;
-    background-color: #FFEB8C;
+    background-color: rgba(255, 235, 140, 0.6);
     line-height: 1.6;
     margin-top: 2em;
     font-family: "Roboto", Arial, Helvetica, sans-serif;

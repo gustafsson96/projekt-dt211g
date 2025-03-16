@@ -12,6 +12,12 @@ h2 {
     font-weight: 300;
 }
 
+h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
 h4 {
     font-size: 1.2em;
     margin: 0.5em 0 0 0;
@@ -27,4 +33,34 @@ select {
     cursor: pointer;
     color: #444444;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+/* brewery list compontents */
+.brewery {
+    width: 17em;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    padding: 1em;
+    margin: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.brewery:hover {
+    transform: scale(1.05);
+}
+
+.brewery-site {
+    margin-top: 0.8em;
+    text-decoration: none;
+    color: #0077cc;
+    font-weight: bold;
+}
+
+.brewery-site:hover {
+    text-decoration: underline;
 }

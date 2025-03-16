@@ -80,7 +80,7 @@ function pinBreweries(breweries) {
 /* Test collecting brewery data, add: by_state=california& after ? before per_page */
 async function fetchBreweriesByState(state) {
   try {
-    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=150`);
+    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=200`);
     const breweries = await response.json();
     console.log(breweries); // console log to check data
 
@@ -155,6 +155,7 @@ function displayBreweryAndWeather(breweries) {
     brewerySite.textContent = brewery.website_url;
     brewerySite.href = brewery.website_url;
     brewerySite.target = "_blank";
+    brewerySite.classList.add("brewery-site");
     breweryElement.appendChild(brewerySite);
 
     const cityState = document.createElement("p");
