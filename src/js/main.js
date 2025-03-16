@@ -1,44 +1,7 @@
-/* Fetch data from brewery API */
-
-/* Fetch data from state API */
-
-/* Function to handle state clicks */
-
-/* Function to display/update side panel with information */
-
-/* Function to handle hover effect on states, add/remove highlight class */
-
-/*
-Attach functions to map elements by eventlisteners
-click --> handle state click
-mouseover --> handleMouseOver (add class)
-mouseout --> handleMouseOut (remove class)
-*/
-
-/* test function to style svg path elements */
-
-/**
- * Style the SVG map by applying a default fill color to all paths.
- * This function listens for the 'load' event on the SVG object, ensuring the SVG is 
- * fully loaded before applying a fill color to each path element.
-
-function styleSvgMap() {
-  const svgObject = document.getElementById('us-map');
-
-  // Ensure the SVG map is loaded before styling is added
-  svgObject.onload = () => {
-    const svgDoc = svgObject.contentDocument;
-    const paths = svgDoc.querySelectorAll('path');
-
-    // Apply a fill color to each path in the SVG
-    paths.forEach(path => {
-      path.style.fill = '#72977a';
-    });
-  };
-}
-
-styleSvgMap();
- */
+let breweriesData = [];
+let breweriesPerPage = 10;
+let currentIndex = 0;
+let map;
 
 document.getElementById("state-selector").addEventListener("change", function (event) {
   const state = event.target.value; //selected state
@@ -47,11 +10,8 @@ document.getElementById("state-selector").addEventListener("change", function (e
   }
 });
 
-
-let map;
-
 function setMap() {
-  map = L.map("map").setView([37.8, -96], 4); 
+  map = L.map("map").setView([37.8, -96], 4);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -84,6 +44,9 @@ async function fetchBreweriesByState(state) {
     const breweries = await response.json();
     console.log(breweries); // console log to check data
 
+    currentIndex = 0;
+    breweriesData = breweries; // store fetched breweries for pagination
+
     // Fetch weather data in parallel for all breweries with lat/lon
     const weatherPromises = breweries.map(async (brewery) => {
       if (brewery.latitude && brewery.longitude) {
@@ -93,16 +56,14 @@ async function fetchBreweriesByState(state) {
       }
     });
 
-    // Wait for all weather data to be fetched
+    // Wait for all weather data to be fetched and attach to breweries
     const weatherResults = await Promise.all(weatherPromises);
-
-    // Attach weather data to breweries
     breweries.forEach((brewery, index) => {
       brewery.weather = weatherResults[index];
     });
 
-    // Display breweries with weather
-    displayBreweryAndWeather(breweries);
+    // Display first breweries
+    displayBreweryAndWeather();
 
     pinBreweries(breweries)
   } catch (error) {
@@ -114,18 +75,18 @@ async function fetchWeatherData(latitude, longitude) {
   try {
     // Fetch weather data from Open-Meteo API
     const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const weatherData = await response.json();
-    const temperature = weatherData.hourly.temperature_2m[0]; 
+    const temperature = weatherData.hourly.temperature_2m[0];
 
     return {
-      detailedForecast: `The current temperature is ${temperature}°C`, 
+      detailedForecast: `The current temperature is ${temperature}°C`,
       temperature: temperature, // Temperature for the first hour (or closest available)
-      temperatureUnit: "°C" 
+      temperatureUnit: "°C"
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
@@ -138,11 +99,16 @@ async function fetchWeatherData(latitude, longitude) {
 }
 
 // display the combined brewery and weather data in the application
-function displayBreweryAndWeather(breweries) {
+function displayBreweryAndWeather() {
   const container = document.getElementById("brewery-container");
-  container.innerHTML = ""; // Clear previous content
 
-  breweries.forEach(brewery => {
+  if (currentIndex === 0) {
+    container.innerHTML = "";
+  }
+
+  const slicedBreweries = breweriesData.slice(currentIndex, currentIndex + breweriesPerPage);
+
+  slicedBreweries.forEach(brewery => {
     const breweryElement = document.createElement("div");
     breweryElement.classList.add("brewery");
 
@@ -162,16 +128,41 @@ function displayBreweryAndWeather(breweries) {
     cityState.textContent = `${brewery.city}, ${brewery.state}`;
     breweryElement.appendChild(cityState);
 
-    const breweryStreet = document.createElement("p");
-    breweryStreet.textContent = brewery.street;
-    breweryElement.appendChild(breweryStreet);
+    if (brewery.street) {
+      const breweryStreet = document.createElement("p");
+      breweryStreet.textContent = brewery.street;
+      breweryElement.appendChild(breweryStreet);
+    }
 
-    const weather = document.createElement("p");
-    weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
-    breweryElement.appendChild(weather);
+    if (brewery.weather) {
+      const weather = document.createElement("p");
+      weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
+      breweryElement.appendChild(weather);
+    }
 
     container.appendChild(breweryElement);
   });
+
+  // update the index
+  currentIndex += breweriesPerPage;
+
+  updateLoadMoreBtn();
 }
 
-document.addEventListener("DOMContentLoaded", setMap);
+document.getElementById("load-more-btn").addEventListener("click", displayBreweryAndWeather);
+
+function updateLoadMoreBtn() {
+  // control the visibility of "load more" btn
+  const loadMoreBtn = document.getElementById("load-more-btn");
+  if (currentIndex >= breweriesData.length) {
+    loadMoreBtn.style.display = "none"; //hide btn when there are no more breweries to display
+  } else {
+    loadMoreBtn.style.display = "block"; // show btn when more breweries exist
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  setMap();
+  updateLoadMoreBtn();
+});

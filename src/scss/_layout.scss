@@ -26,6 +26,11 @@ body {
     margin: 0 auto;
 }
 
+#load-more-container {
+    display: flex;
+    justify-content: center;
+}
+
 footer {
     display: grid;
     grid-template-columns: 30% 30% 5% 35%;
