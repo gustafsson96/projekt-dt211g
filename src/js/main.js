@@ -150,6 +150,7 @@ function displayBreweryAndWeather() {
     if (brewery.weather) {
       const weather = document.createElement("p");
       weather.textContent = `${brewery.weather.detailedForecast} at ${brewery.name}`;
+      weather.classList.add("weather");
       breweryElement.appendChild(weather);
     }
 
