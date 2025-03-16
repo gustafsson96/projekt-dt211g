@@ -65,6 +65,17 @@ select {
     text-decoration: underline;
 }
 
-.load-more-btn {
+#load-more-btn {
     display: none;
+    padding: 0.5em 1em;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+}
+
+#load-more-btn:hover {
+    background-color: #e0e0e0;
 }
