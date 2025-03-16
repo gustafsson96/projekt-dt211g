@@ -1,12 +1,3 @@
-body {
-    padding: 0;
-    margin: 0;
-}
-
-h1 {
-    font-size: 3.5em;
-    text-align: center;
-}
-
-#map { height: 300px; }
-
+@use "layout";
+@use "components";
+@use "animation";
