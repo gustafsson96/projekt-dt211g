@@ -61,11 +61,12 @@ async function fetchBreweriesByState(state) {
     breweries.forEach((brewery, index) => {
       brewery.weather = weatherResults[index];
     });
-
+    
+    // pin all breweries on the map
+    pinBreweries(breweries)
+    
     // Display first breweries
     displayBreweryAndWeather();
-
-    pinBreweries(breweries)
   } catch (error) {
     console.error("Error fetching breweries:", error);
   }
@@ -117,13 +118,20 @@ function displayBreweryAndWeather() {
     name.textContent = brewery.name;
     breweryElement.appendChild(name);
 
-    const brewerySite = document.createElement("a");
-    brewerySite.textContent = brewery.website_url;
-    brewerySite.href = brewery.website_url;
-    brewerySite.target = "_blank";
-    brewerySite.classList.add("brewery-site");
-    breweryElement.appendChild(brewerySite);
-
+    if (brewery.website_url) {
+      const brewerySite = document.createElement("a");
+      brewerySite.textContent = brewery.website_url;
+      brewerySite.href = brewery.website_url;
+      brewerySite.target = "_blank";
+      brewerySite.classList.add("brewery-site");
+      breweryElement.appendChild(brewerySite);
+    } else {
+      const brewerySite = document.createElement("p");
+      brewerySite.textContent = "No website at the moment";
+      brewerySite.style.fontStyle = "italic";
+      breweryElement.appendChild(brewerySite);
+    }
+    
     const cityState = document.createElement("p");
     cityState.textContent = `${brewery.city}, ${brewery.state}`;
     breweryElement.appendChild(cityState);
@@ -132,11 +140,16 @@ function displayBreweryAndWeather() {
       const breweryStreet = document.createElement("p");
       breweryStreet.textContent = brewery.street;
       breweryElement.appendChild(breweryStreet);
+    } else {
+      const breweryStreet = document.createElement("p");
+      breweryStreet.textContent = "No street name to display";
+      breweryStreet.style.fontStyle = "italic";
+      breweryElement.appendChild(breweryStreet);
     }
 
     if (brewery.weather) {
       const weather = document.createElement("p");
-      weather.textContent = `Weather: ${brewery.weather.detailedForecast}`;
+      weather.textContent = `${brewery.weather.detailedForecast} at ${brewery.name}`;
       breweryElement.appendChild(weather);
     }
 
