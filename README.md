@@ -9,7 +9,7 @@ Users can select a state from a dropdown list to display the breweries available
 
 ## API Mashup
 
-* **[Open Brewery DB API:](openbrewerydb)** Fetches necessary brewery details.
+* **[Open Brewery DB API:](https://www.openbrewerydb.org/)** Fetches necessary brewery information.
 * **[Open-Meteo API:](https://open-meteo.com)** Fetches weather data for a specific brewery location using its latitude and longitude.
 
 ## Tools Used
@@ -17,7 +17,7 @@ Users can select a state from a dropdown list to display the breweries available
 * HTML for structure.
 * SCSS for styling.
 * JavaScript to create all main functionality and API mashup.
-* Leaflet to render a map and pin breweries. 
+* Leaflet to render a map to pin breweries on. 
 
 ## Deployment
 The application has been deployed to the web using **[Netlify](https://www.netlify.com)**. It is updated automatically when changes/updates are pushed to the main branch.
