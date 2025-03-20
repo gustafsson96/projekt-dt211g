@@ -90,6 +90,18 @@ select {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
+footer {
+    a {
+        text-decoration: none;
+        font-size: 1.05em;
+        color: darkblue;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
 @media screen and (max-width: 768px) {
     h1 {
         font-size: 4em;
