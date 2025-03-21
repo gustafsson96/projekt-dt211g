@@ -1,4 +1,7 @@
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     padding: 0;
     margin: 0;
 }
@@ -36,6 +39,7 @@ body {
 #load-more-container {
     display: flex;
     justify-content: center;
+    margin: 2em 0 3em;
 }
 
 footer {
@@ -44,7 +48,8 @@ footer {
     padding: 1em;
     background-color: rgba(255, 235, 140, 0.6);
     line-height: 1.6;
-    margin-top: 2em;
+    bottom: 0;
+    margin-top: auto;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
 
     div {
