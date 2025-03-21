@@ -194,9 +194,9 @@ document.getElementById("load-more-btn").addEventListener("click", displayBrewer
 function updateLoadMoreBtn() {
   const loadMoreBtn = document.getElementById("load-more-btn");
   if (currentIndex >= breweriesData.length) {
-    loadMoreBtn.style.display = "none"; //hide btn when there are no more breweries to display
+    loadMoreBtn.style.display = "none"; // Hide btn when there are no more breweries to display
   } else {
-    loadMoreBtn.style.display = "block"; // show btn when more breweries exist
+    loadMoreBtn.style.display = "block"; // Show btn when more breweries exist
   }
 }
 
