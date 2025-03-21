@@ -61,6 +61,7 @@ async function fetchBreweriesByState(state) {
     // Parallel fetch weather data for breweries with lat/lon values or return message
     const weatherPromises = breweries.map(async (brewery) => {
       if (brewery.latitude && brewery.longitude) {
+        await new Promise(resolve => setTimeout(resolve, index * 500));
         return fetchWeatherData(brewery.latitude, brewery.longitude);
       } else {
         return { detailedForecast: "No weather data to display", temperature: "N/A", temperatureUnit: "N/A" };
