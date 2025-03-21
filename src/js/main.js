@@ -52,7 +52,7 @@ function pinBreweries(breweries) {
  */
 async function fetchBreweriesByState(state) {
   try {
-    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=30`);
+    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=20`);
     const breweries = await response.json();
 
     currentIndex = 0; // Reset pagination
