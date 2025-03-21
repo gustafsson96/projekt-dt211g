@@ -52,31 +52,35 @@ function pinBreweries(breweries) {
  */
 async function fetchBreweriesByState(state) {
   try {
-    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=20`);
+    const response = await fetch(`https://api.openbrewerydb.org/v1/breweries?by_state=${state}&per_page=30`);
     const breweries = await response.json();
 
     currentIndex = 0; // Reset pagination
     breweriesData = breweries; // Store fetched breweries for pagination
 
-    // Parallel fetch weather data for breweries with lat/lon values or return message
-    const weatherPromises = breweries.map(async (brewery) => {
+    // Sequentially fetch weather data for each brewery
+    for (let i = 0; i < breweries.length; i++) {
+      const brewery = breweries[i];
+      
+      // If the brewery has latitude and longitude, fetch the weather data
       if (brewery.latitude && brewery.longitude) {
-        return fetchWeatherData(brewery.latitude, brewery.longitude);
+        // Fetch weather data for this brewery
+        const weather = await fetchWeatherData(brewery.latitude, brewery.longitude);
+        brewery.weather = weather; // Attach weather data to the brewery
       } else {
-        return { detailedForecast: "No weather data to display", temperature: "N/A", temperatureUnit: "N/A" };
+        // If no latitude/longitude, set a default message
+        brewery.weather = { 
+          detailedForecast: "No weather data to display", 
+          temperature: "N/A", 
+          temperatureUnit: "N/A" 
+        };
       }
-    });
-
-    // Wait for all weather data to be fetched and attach to corresponding brewery
-    const weatherResults = await Promise.all(weatherPromises);
-    breweries.forEach((brewery, index) => {
-      brewery.weather = weatherResults[index];
-    });
+    }
 
     // Pin all breweries on the map
-    pinBreweries(breweries)
+    pinBreweries(breweries);
 
-    // Display first set of breweries to the screen
+    // Display the first set of breweries to the screen
     displayBreweryAndWeather();
   } catch (error) {
     console.error("Error fetching breweries:", error);
