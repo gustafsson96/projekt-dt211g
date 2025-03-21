@@ -1,3 +1,4 @@
+/* Beer glass for animation */
 .beer-glass {
     grid-column: 5 / 6;
     width: 80px;
@@ -39,6 +40,7 @@
     }
 }
 
+/* Beer glass animation */
 @keyframes fillBeer {
     0% {
         height: 20%;
@@ -48,6 +50,7 @@
     }
 }
 
+/* Media query for screens smaller than 768px */
 @media screen and (max-width: 768px) {
     .beer-glass {
         grid-column: 2 / 5;
